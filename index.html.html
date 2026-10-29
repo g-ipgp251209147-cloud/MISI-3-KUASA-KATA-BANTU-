@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misi 3: Cabaran Kata Bantu</title>
+<style>
+:root{--ink:#fff8ee;--muted:#f5d9c6;--panel:rgba(43,18,35,.88);--gold:#ffd166;--pink:#ff6b8a;--cyan:#74e7ff;--green:#8ff0b0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 10%,#8d2e39 0,transparent 28%),radial-gradient(circle at 85% 85%,#263a78 0,transparent 35%),linear-gradient(135deg,#180f2b,#431c3a 55%,#1b193f);padding:18px}
+.wrap{max-width:900px;margin:auto}
+header{text-align:center;padding:16px 8px 22px}
+.eyebrow{letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;color:var(--gold);font-weight:800}
+h1{margin:7px 0;font-size:clamp(1.8rem,5vw,3rem);line-height:1.08}
+header p{color:var(--muted);margin:8px auto;max-width:640px}
+.flame{font-size:2.6rem;filter:drop-shadow(0 0 12px #ff6b35)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.tab{border:1px solid #ffffff35;border-radius:14px;background:#ffffff0d;color:var(--ink);padding:13px 8px;font-weight:800;cursor:pointer}
+.tab.active{background:linear-gradient(135deg,#ff8a36,#e93d67);border-color:#ffd166;box-shadow:0 6px 24px #ff5a3d38}
+.tab small{display:block;font-weight:500;font-size:.75rem;opacity:.9;margin-top:4px}
+.panel{background:var(--panel);border:1px solid #ffffff26;border-radius:22px;padding:clamp(16px,4vw,28px);box-shadow:0 20px 50px #0003;backdrop-filter:blur(10px)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+.pill{background:#ffffff15;border:1px solid #ffffff20;border-radius:999px;padding:7px 11px}
+.progress{height:9px;background:#ffffff18;border-radius:999px;overflow:hidden;margin:15px 0 22px}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--pink));transition:width .25s}
+h2{font-size:clamp(1.25rem,3vw,1.8rem);margin:10px 0 14px}
+.question{font-size:1.12rem;line-height:1.65;background:#ffffff0c;border:1px solid #ffffff15;padding:18px;border-radius:16px}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:15px}
+.option{font:inherit;text-align:left;color:var(--ink);background:#ffffff0d;border:1px solid #ffffff30;border-radius:13px;padding:13px 14px;cursor:pointer;transition:.15s}
+.option:hover:not(:disabled){background:#ffffff1b;transform:translateY(-1px);border-color:var(--gold)}
+.option:disabled{cursor:default;opacity:1}
+.option.correct{border-color:var(--green);background:#246b4b66}
+.option.wrong{border-color:#ff8799;background:#8f254866}
+.feedback{display:none;margin-top:15px;padding:15px;border-radius:14px;line-height:1.55}
+.feedback.show{display:block}
+.feedback.good{background:#1e684b66;border:1px solid #8ff0b0}
+.feedback.bad{background:#7d2b4566;border:1px solid #ff8799}
+.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:18px}
+button.primary{border:0;border-radius:13px;background:linear-gradient(135deg,#ffd166,#ff8a36);color:#351426;padding:12px 18px;font:inherit;font-weight:900;cursor:pointer}
+button.secondary{border:1px solid #ffffff35;background:#ffffff0c;color:var(--ink);border-radius:13px;padding:11px 15px;font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid white;outline-offset:3px}
+.hide{display:none!important}
+.result{text-align:center;padding:20px 5px}
+.bigscore{font-size:3rem;font-weight:900;color:var(--gold);margin:8px}
+.crystals{font-size:1.6rem;letter-spacing:5px;min-height:35px}
+.note{color:var(--muted);font-size:.88rem;line-height:1.5;margin-top:16px}
+@media(max-width:540px){body{padding:10px}.tabs{gap:6px}.tab{font-size:.83rem;padding:11px 4px}.tab small{font-size:.65rem}.options{grid-template-columns:1fr}.panel{border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="flame">🔥 💎 🔥</div>
+<div class="eyebrow">Misi 3 · Cabaran Kata Bantu</div>
+<h1>Kumpul Kristal Kuasa!</h1>
+<p>Pilih misi, jawab soalan dan kumpulkan kristal. Baca penerangan selepas setiap jawapan untuk menguasai kata bantu.</p>
+</header>
+<div class="tabs" role="tablist" aria-label="Pilih game">
+<button class="tab active" data-mode="aspek" role="tab" aria-selected="true">💧 Game 1<small>Kata Bantu Aspek</small></button>
+<button class="tab" data-mode="ragam" role="tab" aria-selected="false">🔥 Game 2<small>Kata Bantu Ragam</small></button>
+<button class="tab" data-mode="campuran" role="tab" aria-selected="false">⚡ Game 3<small>Aspek + Ragam</small></button>
+</div>
+<section class="panel" id="game">
+<div class="topline"><span class="pill" id="modeLabel">💧 Misi 1: Kuasa Aspek</span><span class="pill" id="score">💎 Kristal: 0</span></div>
+<div class="progress" aria-label="Kemajuan"><span id="progressBar"></span></div>
+<div id="quiz">
+<div class="topline"><span id="qNumber">Soalan 1 daripada 8</span><span class="pill" id="streak">🔥 Jom mula!</span></div>
+<h2 id="qTitle">Lengkapkan ayat dengan kata bantu yang paling tepat.</h2>
+<div class="question" id="question"></div>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="actions"><button class="secondary" id="restart">↻ Mula semula</button><button class="primary hide" id="next">Soalan seterusnya →</button></div>
+</div>
+<div class="result hide" id="result">
+<div class="flame">🏆</div><h2>Misi Selesai!</h2><div class="bigscore" id="finalScore">0/8</div><div class="crystals" id="finalCrystals">💎</div><p id="resultText"></p>
+<button class="primary" id="playAgain">Main lagi ↻</button>
+</div>
+</section>
+<p class="note">Nota: Kata bantu aspek menerangkan masa atau keadaan sesuatu perbuatan (contohnya sedang, telah, akan). Kata bantu ragam menerangkan kehendak, keupayaan, keizinan atau kewajipan (contohnya mahu, dapat, boleh, mesti).</p>
+</div>
+<script>
+const games={
+aspek:{label:"💧 Game 1: Kuasa Kata Bantu Aspek",questions:[
+{q:"Aina ______ menyiapkan latihan sekarang.",opts:["telah","sedang","akan","belum"],a:1,why:"Jawapan: sedang. Perkataan “sekarang” menunjukkan perbuatan sedang berlaku. “Sedang” ialah kata bantu aspek."},
+{q:"Kami ______ melawat Melaka pada cuti sekolah yang lalu.",opts:["akan","belum","pernah","masih"],a:2,why:"Jawapan: pernah. Ayat merujuk pengalaman yang berlaku pada masa lalu. “Pernah” ialah kata bantu aspek."},
+{q:"Abang ______ pergi ke latihan bola sepak esok petang.",opts:["telah","akan","sedang","pernah"],a:1,why:"Jawapan: akan. Perkataan “esok petang” menunjukkan perbuatan yang bakal berlaku."},
+{q:"Murid itu ______ menghantar tugasan, jadi dia perlu menyiapkannya dahulu.",opts:["sudah","belum","pernah","sedang"],a:1,why:"Jawapan: belum. Ayat menunjukkan tugasan masih tidak dihantar sehingga kini."},
+{q:"Nenek ______ tinggal di kampung itu sejak kecil hingga sekarang.",opts:["akan","telah","masih","belum"],a:2,why:"Jawapan: masih. Perkataan ini menunjukkan keadaan yang berterusan hingga sekarang."},
+{q:"Pasukan sekolah ______ memenangi pertandingan itu sebelum ini.",opts:["pernah","akan","belum","sedang"],a:0,why:"Jawapan: pernah. Frasa “sebelum ini” menunjukkan pengalaman yang berlaku pada masa lalu."},
+{q:"Ketika loceng berbunyi, para murid ______ membaca di perpustakaan.",opts:["akan","sedang","belum","telah"],a:1,why:"Jawapan: sedang. Kata bantu ini menunjukkan perbuatan yang sedang berlangsung ketika sesuatu kejadian berlaku."},
+{q:"Ayah ______ pulang dari tempat kerja; kita boleh menunggunya sebentar lagi.",opts:["sudah","belum","pernah","masih"],a:1,why:"Jawapan: belum. Ayat menunjukkan ayah belum pulang pada waktu itu."}
+]},
+ragam:{label:"🔥 Game 2: Kuasa Kata Bantu Ragam",questions:[
+{q:"Semua murid ______ mematuhi peraturan keselamatan sekolah.",opts:["pernah","mesti","sedang","belum"],a:1,why:"Jawapan: mesti. “Mesti” menyatakan kewajipan atau sesuatu yang wajib dilakukan."},
+{q:"Adik ______ menjadi doktor apabila dewasa nanti.",opts:["hendak","telah","sedang","belum"],a:0,why:"Jawapan: hendak. Kata bantu ini menyatakan hasrat atau keinginan."},
+{q:"Kamu ______ menggunakan kamus itu untuk mencari maksud perkataan.",opts:["boleh","pernah","masih","telah"],a:0,why:"Jawapan: boleh. “Boleh” menyatakan keizinan atau kebenaran."},
+{q:"Walaupun penat, Farid ______ menyiapkan tugasan itu tanpa bantuan.",opts:["dapat","belum","sedang","pernah"],a:0,why:"Jawapan: dapat. “Dapat” menunjukkan keupayaan atau kejayaan melakukan sesuatu."},
+{q:"Kita ______ menjaga kebersihan kelas supaya selesa untuk belajar.",opts:["harus","telah","sedang","pernah"],a:0,why:"Jawapan: harus. “Harus” menyatakan kewajipan atau sesuatu yang wajar dilakukan."},
+{q:"Siti ______ menyertai pertandingan bercerita kerana dia tidak berminat.",opts:["enggan","akan","masih","telah"],a:0,why:"Jawapan: enggan. Perkataan ini menyatakan keengganan atau tidak mahu melakukan sesuatu."},
+{q:"Saya ______ membeli buku baharu, tetapi masih mengumpulkan wang.",opts:["mahu","sedang","pernah","belum"],a:0,why:"Jawapan: mahu. “Mahu” menyatakan keinginan untuk melakukan sesuatu."},
+{q:"Cuaca gelap; hujan ______ turun sebentar lagi.",opts:["mungkin","telah","pernah","masih"],a:0,why:"Jawapan: mungkin. Kata bantu ini menunjukkan kemungkinan sesuatu berlaku."}
+]},
+campuran:{label:"⚡ Game 3: Gabungan Aspek + Ragam",questions:[
+{q:"Ibu ______ memasak di dapur ketika kami tiba.",opts:["sedang","mesti","mahu","boleh"],a:0,why:"Jawapan: sedang. Kata bantu aspek ini menunjukkan perbuatan yang sedang berlaku ketika kami tiba."},
+{q:"Setiap pengguna jalan raya ______ mematuhi lampu isyarat.",opts:["pernah","mesti","akan","sedang"],a:1,why:"Jawapan: mesti. Ini kata bantu ragam yang menyatakan kewajipan."},
+{q:"Kami ______ menonton persembahan itu pada tahun lepas.",opts:["pernah","harus","enggan","mungkin"],a:0,why:"Jawapan: pernah. Kata bantu aspek ini menunjukkan pengalaman lalu."},
+{q:"Kakak ______ menyertai kelab robotik kerana dia sangat berminat.",opts:["mahu","telah","belum","masih"],a:0,why:"Jawapan: mahu. Kata bantu ragam ini menyatakan keinginan."},
+{q:"Bas ke Kuala Lumpur ______ bertolak pada pukul 8.00 pagi esok.",opts:["akan","dapat","enggan","mesti"],a:0,why:"Jawapan: akan. Kata bantu aspek ini menunjukkan perbuatan pada masa hadapan."},
+{q:"Walaupun latihan sukar, pasukan itu ______ menyelesaikannya bersama-sama.",opts:["dapat","belum","sedang","pernah"],a:0,why:"Jawapan: dapat. Kata bantu ragam ini menunjukkan keupayaan untuk melakukan sesuatu."},
+{q:"Saya ______ menyiapkan kerja sekolah itu; ada dua soalan lagi belum dijawab.",opts:["belum","harus","hendak","boleh"],a:0,why:"Jawapan: belum. Kata bantu aspek ini menunjukkan perbuatan masih belum selesai."},
+{q:"Kita ______ menghormati guru dan rakan-rakan.",opts:["harus","pernah","sedang","akan"],a:0,why:"Jawapan: harus. Kata bantu ragam ini menyatakan perkara yang wajar atau patut dilakukan."},
+{q:"Adik ______ tidur lagi kerana dia masih mahu membaca buku.",opts:["belum","mesti","dapat","enggan"],a:0,why:"Jawapan: belum. Kata bantu aspek ini menunjukkan perbuatan tidur belum berlaku."},
+{q:"Langit semakin gelap; ribut ______ melanda kawasan ini.",opts:["mungkin","telah","sedang","pernah"],a:0,why:"Jawapan: mungkin. Kata bantu ragam ini menyatakan kemungkinan."}
+]}
+};
+let mode="aspek",idx=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+function start(newMode=mode){mode=newMode;idx=0;score=0;answered=false;document.querySelectorAll(".tab").forEach(t=>{let active=t.dataset.mode===mode;t.classList.toggle("active",active);t.setAttribute("aria-selected",active?"true":"false")});$("modeLabel").textContent=games[mode].label;$("quiz").classList.remove("hide");$("result").classList.add("hide");render()}
+function render(){const data=games[mode].questions[idx];answered=false;$("qNumber").textContent=`Soalan ${idx+1} daripada ${games[mode].questions.length}`;$("score").textContent=`💎 Kristal: ${score}`;$("streak").textContent=idx===0?"🔥 Jom mula!":"⚡ Teruskan perjuangan!";$("progressBar").style.width=`${idx/games[mode].questions.length*100}%`;$("question").textContent=data.q;$("feedback").className="feedback";$("feedback").textContent="";$("next").classList.add("hide");$("options").innerHTML="";data.opts.forEach((opt,i)=>{const b=document.createElement("button");b.className="option";b.textContent=String.fromCharCode(65+i)+". "+opt;b.onclick=()=>choose(i,b);$("options").appendChild(b)});}
+function choose(choice,btn){if(answered)return;answered=true;const data=games[mode].questions[idx];const buttons=[...$("options").children];buttons.forEach((b,i)=>{b.disabled=true;if(i===data.a)b.classList.add("correct")});const fb=$("feedback");if(choice===data.a){score++;btn.classList.add("correct");fb.className="feedback show good";fb.innerHTML="💎 <strong>Tepat sekali! Kristal kuasa diperoleh.</strong><br>"+data.why}else{btn.classList.add("wrong");fb.className="feedback show bad";fb.innerHTML="✨ <strong>Belum tepat. Cuba ingat semula.</strong><br>"+data.why} $("score").textContent=`💎 Kristal: ${score}`;$("progressBar").style.width=`${(idx+1)/games[mode].questions.length*100}%`;$("next").textContent=idx===games[mode].questions.length-1?"Lihat keputusan 🏆":"Soalan seterusnya →";$("next").classList.remove("hide")}
+function next(){if(!answered)return;if(idx<games[mode].questions.length-1){idx++;render()}else finish()}
+function finish(){$("quiz").classList.add("hide");$("result").classList.remove("hide");const total=games[mode].questions.length;$("finalScore").textContent=`${score}/${total}`;$("finalCrystals").textContent="💎".repeat(Math.max(1,score));$("progressBar").style.width="100%";$("resultText").textContent=score===total?"Hebat! Semua kristal berjaya dikumpulkan. Kamu menguasai misi ini!":score>=Math.ceil(total*.7)?"Bagus! Kuasa kata bantu semakin kuat. Cuba lagi untuk mengumpulkan semua kristal.":"Terus berlatih! Baca nota dan penerangan jawapan, kemudian cuba misi sekali lagi."}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>start(t.dataset.mode)));
+$("next").addEventListener("click",next);$("restart").addEventListener("click",()=>start(mode));$("playAgain").addEventListener("click",()=>start(mode));start("aspek");
+</script>
+</body>
+</html>
